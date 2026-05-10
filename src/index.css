@@ -1,0 +1,62 @@
+.contactDiv{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 70em;
+}
+
+.contactDiv:hover{
+    background-color: lightgray;
+}
+
+.contactDivInfo{
+    margin: 0em 1em 0em 1em;
+    width: 50em;
+}
+
+img{
+    width: 195px;
+    height: 200px;
+    border-radius: 50%;
+}
+
+#info{
+    font-size: 1.2em;
+    color: gray;
+}
+
+i{
+    color: gray;
+    margin-right: 0.5em;
+}
+
+#button1, #button2{
+    width: 6em;
+    justify-content: center;
+    padding:1em;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    margin:0.5em; 
+}
+
+#buttonSave{
+    margin: 2em 0em 1em 0em;
+    background-color: rgb(105, 90, 90);
+    width: 30em;
+}
+
+input{
+    width: 150%;
+    padding: 0.5em;
+    margin: 0.5em 0em 0.5em 0em;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+#backHomeButton{
+    background-color: rgb(31, 19, 19);
+    margin-bottom: 10em;
+}
