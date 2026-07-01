@@ -2,15 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
+const AGENDA_SLUG = "santiago024"; 
+
 export const Demo = () => {
   const { store, dispatch } = useGlobalReducer();
   const navigate = useNavigate();
 
   const [contacto, setContacto] = useState(
     store.contactoEditando || {
-      nombre: "",
-      ubicacion: "",
-      telefono: "",
+      name: "",     
+      address: "",  
+      phone: "",    
       email: ""
     }
   );
@@ -19,11 +21,40 @@ export const Demo = () => {
     setContacto({ ...contacto, [e.target.name]: e.target.value });
   };
 
-  const guardarContacto = () => {
-    if (contacto.id) {
-        dispatch({ type: 'actualizar_contacto', payload: contacto });
-    } else {
-        dispatch({ type: 'agregar_contacto', payload: contacto });
+  const guardarContacto = async () => {
+    const url = contacto.id 
+      ? `https://playground.4geeks.com/contact/agendas/${AGENDA_SLUG}/contacts/${contacto.id}`
+      : `https://playground.4geeks.com/contact/agendas/${AGENDA_SLUG}/contacts`;
+    
+    const method = contacto.id ? "PUT" : "POST";
+
+    try {
+        const respuesta = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: contacto.name,
+                phone: contacto.phone,
+                email: contacto.email,
+                address: contacto.address
+            })
+        });
+
+        if (respuesta.ok) {
+            const dataGuardada = await respuesta.json();
+            
+            if (contacto.id) {
+                dispatch({ type: 'actualizar_contacto', payload: dataGuardada });
+            } else {
+                dispatch({ type: 'agregar_contacto', payload: dataGuardada });
+            }
+            
+            navigate('/');
+        } else {
+            alert("Hubo un error guardando el contacto en la base de datos.");
+        }
+    } catch (error) {
+        console.error("Error en el fetch:", error);
     }
   };
 
@@ -35,15 +66,15 @@ export const Demo = () => {
 
       <div className="mb-4">
         <label className="form-label">Nombre Completo</label>
-        <input type="text" className="form-control" name="nombre" value={contacto.nombre} onChange={handleChange} placeholder="Daniel Díaz" />
+        <input type="text" className="form-control" name="name" value={contacto.name} onChange={handleChange} placeholder="Daniel Díaz" />
       </div>
       <div className="mb-4">
         <label className="form-label">Ubicación</label>
-        <input type="text" className="form-control" name="ubicacion" value={contacto.ubicacion} onChange={handleChange} placeholder="Madrid, España" />
+        <input type="text" className="form-control" name="address" value={contacto.address} onChange={handleChange} placeholder="Madrid, España" />
       </div>
       <div className="mb-4">
         <label className="form-label">Teléfono</label>
-        <input type="text" className="form-control" name="telefono" value={contacto.telefono} onChange={handleChange} placeholder="XXX-XXX-XXX"/>
+        <input type="text" className="form-control" name="phone" value={contacto.phone} onChange={handleChange} placeholder="XXX-XXX-XXX"/>
       </div>
       <div className="mb-4">
         <label className="form-label">Correo Electrónico</label>
@@ -51,11 +82,11 @@ export const Demo = () => {
       </div>
 
       <div className="text-center">
-        <button id="buttonSave" className="btn btn-danger" onClick={guardarContacto}>Guardar Cambios</button>
+        <button className="btn btn-danger w-100" onClick={guardarContacto}>Guardar Cambios</button>
       </div>
       <div className="text-center mt-3">
         <Link to="/">
-          <button id="backHomeButton" className="btn btn-primary">Volver al inicio</button>
+          <button className="btn btn-primary w-100">Volver al inicio</button>
         </Link>
       </div>
     </div>
